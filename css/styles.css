@@ -1,0 +1,19 @@
+/*
+ * Styling for index.html 
+ *
+ * =========================================================================
+ */
+
+html {
+	height: 100%
+}
+body {
+	height: 100%; margin: 0; padding: 0px
+}
+.tellus {
+	color: #000;
+	
+}
+#map_canvas { 
+	height: 100%
+}

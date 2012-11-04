@@ -49,11 +49,12 @@
 		
 				if(!gotLocation){
 					//Only get the address from the form if current location has not been selected
-					window.address = (document.getElementById("Address").value);
+					var address = (document.getElementById("Address").value);
 					//Here we get the address and then return the latitude and longitude
 					geocoder.geocode({ 'address': address}, function(results, status) {  
 						if (status == google.maps.GeocoderStatus.OK) {
-							window.point = new Parse.GeoPoint({latitude:results[0].geometry.location.lat(),longitude:results[0].geometry.location.lng()});
+							alert('geocoder OK');
+							point = new Parse.GeoPoint({latitude:results[0].geometry.location.lat(),longitude:results[0].geometry.location.lng()});
 							saveHotel();
 						}
 						else {  
@@ -82,6 +83,7 @@
 					hotels.set("Address",address);
 					hotels.set("Website",Website);
 					hotels.set("Phone",phone);
+					hotels.set("Location", point);
 										//Saving to Hotspot table
 					hotels.save(null,{
 						success: function(Hotels){
@@ -208,7 +210,7 @@
 
 					</div><!-->
 			    	
-					<input type="button" value="Submit" onclick="saveHotel()" data-theme="a" data-mini="true"/>  	
+					<input type="button" value="Submit" onclick="mainFunction()" data-theme="a" data-mini="true"/>  	
 	
 			    </form>
 			</div>
