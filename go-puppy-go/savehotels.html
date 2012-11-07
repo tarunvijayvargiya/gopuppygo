@@ -87,10 +87,10 @@
                     //Saving to Hotspot table
           hotels.save(null,{
             success: function(Hotels){
-              alert("Data saved successfully on GopuppyGo"); //should change these to jquery alerts.
+              alert("Data saved successfully on GoPuppyGo"); //should change these to jquery alerts.
             },
             error: function(Hotels,error){
-              alert("Could not save data on GopuppyGo");
+              alert("Could not save data on GoPuppyGo");
             }
           });
       }
@@ -160,19 +160,19 @@
   <body onload="initialize()"> 
     <div data-role="page" id="page1"  data-theme="b">
       <div data-role="header" data-theme="a" style="height:35px;">
-        <h1>HOtel's INfo</h1>
+        <h1>Hotel's Info</h1>
       </div><!-- /header -->
       
       <div data-role="content" id="contentMain" name="contentMain"> 
         <form id="hotel-form">
         
           <div id="details" data-role="fieldcontain">
-            <h4 >Tell us about Hotel.</h4>
+            <h4 >Tell us about the hotel.</h4>
 
             <label for="Name" class="ui-hidden-accessible">Name:</label>
             <input id="Name" name="Name" type="text" value="" placeholder="Hotel Name" data-mini="true"/><br>
 
-            <label for="Restrictions" class="ui-hidden-accessible">Restrictions</label>
+            <label for="Restrictions" class="ui-hidden-accessible">Restrictions:</label>
             <input id="Restrictions" name="Restrictions" type="text" placeholder="Add restrictions" data-mini="true"/><br>
 
             <label for="Address" class="ui-hidden-accessible">Address:</label>
@@ -216,7 +216,7 @@
       </div>
 
       <div class="footer" data-role="footer" data-theme="a" >
-      &copy; 2012 GoPuppyGO Alpha.
+      &copy; 2012 GoPuppyGo Alpha.
       </div><!-- /footer -->
     </div>
   </body>
