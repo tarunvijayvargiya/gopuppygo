@@ -1,127 +1,127 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Look for Pet Friendly Hotels</title>
-		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-		<link type="text/css" rel="stylesheet" href="css/styles.css" media="screen" />
-		<script type="text/javascript"
-		src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBVYmtKrniJdpYFLa4-QMXaWYemedvw1bA&sensor=true"></script>
-		<!-- The script below is to get location information using I.P. address-->
-		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-		<script type="text/javascript">
-			//google.load("search", "1.0");
-		</script>
-		<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.1.5.min.js"></script>
-		<script type="text/javascript">
-			//Global variables
-			//Flags and Parse constants
-			var gotLocation = false;
-			//var Hotspots;
-			var Hotels;
-			
-			//Map related globals
-			var mapOptions;
-			var map;
-			var markers = new Array();
+  <head>
+    <title>Look for Pet Friendly Hotels</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link type="text/css" rel="stylesheet" href="css/styles.css" media="screen" />
+    <script type="text/javascript"
+    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBVYmtKrniJdpYFLa4-QMXaWYemedvw1bA&sensor=true"></script>
+    <!-- The script below is to get location information using I.P. address-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      //google.load("search", "1.0");
+    </script>
+    <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.1.5.min.js"></script>
+    <script type="text/javascript">
+      //Global variables
+      //Flags and Parse constants
+      var gotLocation = false;
+      //var Hotspots;
+      var Hotels;
+      
+      //Map related globals
+      var mapOptions;
+      var map;
+      var markers = new Array();
 
-			//InfoWindow related vars
-			var singleInfoWindow = new google.maps.InfoWindow();
-			var contentStringArr = new Array();
-			var emailStringArr = new Array();
-			var idArr = new Array();
+      //InfoWindow related vars
+      var singleInfoWindow = new google.maps.InfoWindow();
+      var contentStringArr = new Array();
+      var emailStringArr = new Array();
+      var idArr = new Array();
 
-			//Temp. variable to store email from the Users table
-			var curEmail = "No Contact";
-			if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(initializeMap)
-			}
+      //Temp. variable to store email from the Users table
+      var curEmail = "No Contact";
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(initializeMap)
+      }
 
-			function initializeMap(position) {
-				var curLat;
-				var curLong;
-				curLat = position.coords.latitude;
-				curLong = position.coords.longitude;
+      function initializeMap(position) {
+        var curLat;
+        var curLong;
+        curLat = position.coords.latitude;
+        curLong = position.coords.longitude;
 
-				mapOptions = {
-					center : new google.maps.LatLng(curLat, curLong),
-					zoom : 14,
-					mapTypeId : google.maps.MapTypeId.ROADMAP
-				};
-				map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-				var image = 'images/marker.png';
+        mapOptions = {
+          center : new google.maps.LatLng(curLat, curLong),
+          zoom : 14,
+          mapTypeId : google.maps.MapTypeId.ROADMAP
+        };
+        map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+        var image = 'images/marker.png';
 
-				//Creating Parse GeoPoint variable and setting up the query to fetch nearest 10 points
-				var point = new Parse.GeoPoint({
-					latitude : curLat,
-					longitude : curLong
-				});
-				var query = new Parse.Query(Hotels);
-				query.near("Location", point);
-				query.limit(10);
+        //Creating Parse GeoPoint variable and setting up the query to fetch nearest 10 points
+        var point = new Parse.GeoPoint({
+          latitude : curLat,
+          longitude : curLong
+        });
+        var query = new Parse.Query(Hotels);
+        query.near("Location", point);
+        query.limit(10);
 
-				//This is the select clause of the query. If successful, for each resutl, draw a marker
-				query.find({
-					success : function(results) {
-						for (var resultCount = 0; resultCount < results.length; resultCount++) {
-							//Get location for current Hotspot
-							var myLatLng = new google.maps.LatLng(results[resultCount].get("Location").latitude, results[resultCount].get("Location").longitude);
+        //This is the select clause of the query. If successful, for each resutl, draw a marker
+        query.find({
+          success : function(results) {
+            for (var resultCount = 0; resultCount < results.length; resultCount++) {
+              //Get location for current Hotspot
+              var myLatLng = new google.maps.LatLng(results[resultCount].get("Location").latitude, results[resultCount].get("Location").longitude);
 
-							//Get bandwidth and name data for Wi-Fi location from Parse. Appending current email as well
-							contentStringArr[resultCount] = "<b>" + "Hotel Name: " + "</b>" + results[resultCount].get("Name") + "<br>" + "<b>" + "Address: " + "</b> $" + results[resultCount].get("Address") + "<br>" + "<b>" + "Mail: " + "</b>" + "<a href=\"" + results[resultCount].get("Website") + "\"></a>";
+              //Get bandwidth and name data for Wi-Fi location from Parse. Appending current email as well
+              contentStringArr[resultCount] = "<b>" + "Hotel Name: " + "</b>" + results[resultCount].get("Name") + "<br>" + "<b>" + "Address: " + "</b>" + results[resultCount].get("Address") + "<br>" + "<b>" + "Website: " + "</b>" + "<a href='http://" + results[resultCount].get("Website") + "'>" + results[resultCount].get("Website") + "</a>" + "<br>" + "<b>" + "Phone: " + "</b>" + results[resultCount].get("Phone");
 
-							//Create markers for each result fetched from Parse
-							markers[resultCount] = new google.maps.Marker({
-								position : myLatLng,
-								map : map,
-								icon : image,
-								draggable : false,
-								animation : google.maps.Animation.DROP,
-								title : results[resultCount].get("Name")
-							});
+              //Create markers for each result fetched from Parse
+              markers[resultCount] = new google.maps.Marker({
+                position : myLatLng,
+                map : map,
+                icon : image,
+                draggable : false,
+                animation : google.maps.Animation.DROP,
+                title : results[resultCount].get("Name")
+              });
 
-							//Attaching event listeners to each marker
-							markerClickListener(markers[resultCount], resultCount);
+              //Attaching event listeners to each marker
+              markerClickListener(markers[resultCount], resultCount);
 
-						}
-					}, //End of HotSpot query for successful fetch.
+            }
+          }, //End of HotSpot query for successful fetch.
 
-					error : function(error) {
-						alert("Error: " + error.code + " " + error.message);
-					}
-				});
-			}//End of Initialize map.
+          error : function(error) {
+            alert("Error: " + error.code + " " + error.message);
+          }
+        });
+      }//End of Initialize map.
 
-			function markerClickListener(marker, position) {
-				google.maps.event.addListener(marker, 'click', function() {
-					singleInfoWindow.setContent(contentStringArr[position]);
-					singleInfoWindow.open(map, marker);
-				});
-			}
+      function markerClickListener(marker, position) {
+        google.maps.event.addListener(marker, 'click', function() {
+          singleInfoWindow.setContent(contentStringArr[position]);
+          singleInfoWindow.open(map, marker);
+        });
+      }
 
-			function errorFunction() {
-				alert('Browser does not support location data');
-				gotLocation = false;
-				initializeMap();
-			}
+      function errorFunction() {
+        alert('Browser does not support location data');
+        gotLocation = false;
+        initializeMap();
+      }
 
-			function initialize() {
-				Parse.initialize("LKworc4PQlQ5YL1rgYWVqWGRbPE48a6oLpDCx0Lh", "bbjJLDdBzrMgnHMtCMyq0FgYqIhyPi6TROoakWU1");
-				Hotels = Parse.Object.extend("Hotels");
+      function initialize() {
+        Parse.initialize("LKworc4PQlQ5YL1rgYWVqWGRbPE48a6oLpDCx0Lh", "bbjJLDdBzrMgnHMtCMyq0FgYqIhyPi6TROoakWU1");
+        Hotels = Parse.Object.extend("Hotels");
 
-				if (navigator.geolocation) {
-					navigator.geolocation.getCurrentPosition(initializeMap, errorFunction);
-					gotLocation = true;
-				} else {
-					alert('Error: No location');
-				}
-			}
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(initializeMap, errorFunction);
+          gotLocation = true;
+        } else {
+          alert('Error: No location');
+        }
+      }
 
-		</script>
-	</head>
-	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    </script>
+  </head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 
-	<!--HTML BODY -->
-	<body onload="initialize()">
-		<div id="map_canvas" style="width:100%; height:100%"></div>
-	</body>
+  <!--HTML BODY -->
+  <body onload="initialize()">
+    <div id="map_canvas" style="width:100%; height:100%"></div>
+  </body>
 </html>
