@@ -111,9 +111,9 @@
             alert("Error: " + error.code + " " + error.message);
           }
         });
-        alert('finished querying hotels');
+        
         var restquery = new Parse.Query(Restaurants);
-        alert('blah'); 
+         
         restquery.near("Location", point);
         restquery.limit(10);
 
