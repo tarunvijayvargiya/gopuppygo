@@ -44,16 +44,16 @@
       var curEmail = "No Contact";
 
       function initializeMap(position) {
-        
+
         var curLat;
         var curLong;
         if (useCurrent == true) {
-          
+
           curLat = position.coords.latitude;
           curLong = position.coords.longitude;
           //alert(curLat + '\n' + curLong);
         } else {
-          
+
           curLat = position.lat();
           curLong = position.lng();
         }
@@ -63,8 +63,8 @@
           mapTypeId : google.maps.MapTypeId.ROADMAP
         };
         map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-        var image = 'images/marker.png';
-        var restimage = 'images/blue-dot.png';
+        var image = 'images/hotel-icon.png';
+        var restimage = 'images/red-restaurant.png';
 
         //Creating Parse GeoPoint variable and setting up the query to fetch nearest 10 points
         var point = new Parse.GeoPoint({
@@ -83,13 +83,7 @@
               var myLatLng = new google.maps.LatLng(results[resultCount].get("Location").latitude, results[resultCount].get("Location").longitude);
 
               //Get bandwidth and name data for Wi-Fi location from Parse. Appending current email as well
-              contentString = results[resultCount].get("Name") + "<br>" + 
-                results[resultCount].get("Address") + "<br>" + "<a href='http://" + 
-                results[resultCount].get("Website") + "'>" + 
-                results[resultCount].get("Website") + "</a>" + "<br>" + 
-                results[resultCount].get("Phone") + "<br>" +
-                "Extra fee for pets? " + results[resultCount].get("Pet_fee") + "<br>" + 
-                "Price rating: " + results[resultCount].get("Price");
+              contentString = results[resultCount].get("Name") + "<br>" + results[resultCount].get("Address") + "<br>" + "<a href='http://" + results[resultCount].get("Website") + "'>" + results[resultCount].get("Website") + "</a>" + "<br>" + results[resultCount].get("Phone") + "<br>" + "Extra fee for pets? " + results[resultCount].get("Pet_fee") + "<br>" + "Price rating: " + results[resultCount].get("Price");
 
               //Create markers for each result fetched from Parse
               markers[resultCount] = new google.maps.Marker({
@@ -111,9 +105,9 @@
             alert("Error: " + error.code + " " + error.message);
           }
         });
-        
+
         var restquery = new Parse.Query(Restaurants);
-         
+
         restquery.near("Location", point);
         restquery.limit(10);
 
@@ -125,12 +119,7 @@
               var myLatLng = new google.maps.LatLng(results[resultCount].get("Location").latitude, results[resultCount].get("Location").longitude);
 
               //Get bandwidth and name data for Wi-Fi location from Parse. Appending current email as well
-               contentString = results[resultCount].get("Name") + "<br>" + 
-                results[resultCount].get("Address") + "<br>" + "<a href='http://" + 
-                results[resultCount].get("Website") + "'>" + 
-                results[resultCount].get("Website") + "</a>" + "<br>" + 
-                results[resultCount].get("Phone") + "<br>" +
-                "Cuisine: " + results[resultCount].get("Cuisine");
+              contentString = results[resultCount].get("Name") + "<br>" + results[resultCount].get("Address") + "<br>" + "<a href='http://" + results[resultCount].get("Website") + "'>" + results[resultCount].get("Website") + "</a>" + "<br>" + results[resultCount].get("Phone") + "<br>" + "Cuisine: " + results[resultCount].get("Cuisine");
 
               //Create markers for each result fetched from Parse
               restMarkers[resultCount] = new google.maps.Marker({
@@ -151,7 +140,7 @@
           error : function(error) {
             alert("Error: " + error.code + " " + error.message);
           }
-        }); 
+        });
       }//End of Initialize map.
 
       function markerClickListener(marker, contentString) {
@@ -183,10 +172,13 @@
         });
       }
 
-      $( '.target' ).textinput({
-      create: function(event, ui) {codeAddress(); }
-    });
-      
+
+      $('.target').textinput({
+        create : function(event, ui) {
+          codeAddress();
+        }
+      });
+
       function errorFunction() {
         alert('Browser does not support location data');
         gotLocation = false;
@@ -207,50 +199,19 @@
 
       }
 
+      function toggleFormLinks() {
+        var formdiv = document.getElementById("formdiv");
+        if (formdiv.style.display == 'none') {
+          formdiv.style.display = 'block';
+          window.scroll(0,100000);
+        }
+        else {
+          formdiv.style.display ='none';
+        } 
+      }
+      
+
     </script>
-    <!-- <script language="javascript">
-    var curLat;
-    var curLong;
-    var geocoder;
-    var map;
-    var mapOptions;
-    var image = 'images/marker.png';
-    var useCurrent = true;
-    function initialize() {
-    alert('initializing');
-    Parse.initialize("LKworc4PQlQ5YL1rgYWVqWGRbPE48a6oLpDCx0Lh", "bbjJLDdBzrMgnHMtCMyq0FgYqIhyPi6TROoakWU1");
-    alert('parse keys initialized');
-    Hotels = Parse.Object.extend("Hotels");
-    alert('hotels established');
-
-    if (navigator.geolocation) {
-    alert('geolocation enabled');
-    navigator.geolocation.getCurrentPosition(drawMap, relocate);
-    } else {
-    alert('Error: No location');
-    }
-    }
-
-    function drawMap(position) {
-    alert('drawing map');
-    curLat = position.coords.latitude;
-    curLong = position.coords.longitude;
-
-    mapOptions = {
-    center : new google.maps.LatLng(curLat, curLong),
-    zoom : 10,
-    mapTypeId : google.maps.MapTypeId.ROADMAP
-    };
-    map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-
-    }
-
-    function relocate() {
-    alert('reloacte');
-    }
-    </script>
-
-    -->
   </head>
 
   <body onload="initialize()">
@@ -259,12 +220,17 @@
         <h1><img src="images/pet.png" height="23" width="20"/> GoPuppyGo!</h1>
       </div><!-- /header -->
       <div>
-        <center>Are there any Hotels and Restaurants around where I can bring my pet?</center>
+        <center>
+          Are there any Hotels and Restaurants around where I can bring my pet?
+        </center>
       </div>
       <div data-role="content">
         <div class="ui-bar-c ui-corner-all ui-shadow" style="padding:0.45em;">
           <div id="map_canvas" class="map rounded" style="height:300px;">
-            <span><p>Enter a location and press 'relocate'</p></span>
+            <span>
+              <p>
+                Enter a location and press 'relocate'
+              </p></span>
           </div>
         </div>
       </div><!-- adding the map showing current position of user -->
@@ -274,17 +240,18 @@
         id="target"
         placeholder="Search Address" />
       </div>
-      <!--  <div data-role="content">
-      <ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="a">
-      <li data-theme = "e"><a href="removewifi.html" data-ajax="false">Remove my Wi-Fi</a></li>
-      </ul>
-      </div><!-- /content -->
-
+     
+      <div id="formdiv" style="display:none" align="center">
+        <ul data-role="listview" data-theme="b" align="center">
+          <li><a href="savehotels.html" align="center">Hotel</a></li>
+          <li><a href="restaurant.html" align="center">Restaurant</a></li>
+        </ul>
+      </div>
       <div class="footer" data-role="footer" data-theme="a" >
         <div data-role="controlgroup" data-type="horizontal">
           <!--<a data-role="button" data-theme="a" data-ajax="false">Hotels</a>
           <a data-role="button" data-theme="a" data-ajax="false">Restaurants</a>-->
-          <a href="savehotels.html" data-role="button" data-theme="a" data-ajax="false">Submit Hotel Info</a>
+          <a data-role="button" data-theme="a" data-ajax="false" onclick="toggleFormLinks()">Submit New Data</a>
           <a data-role="button" data-theme="a" data-ajax="false" onclick="codeAddress()">Change Location</a>
         </div>
       </div><!-- /footer -->
