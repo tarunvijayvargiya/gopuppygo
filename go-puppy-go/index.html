@@ -23,11 +23,13 @@
       //var Hotspots;
       var Hotels;
       var Restaurants;
+      var Parks;
       //Map related globals
       var mapOptions;
       var map;
       var markers = new Array();
       var restMarkers = new Array();
+      var parkMarkers = new Array();
       var input;
       var geocoder = new google.maps.Geocoder();
       var searchbox;
@@ -65,6 +67,7 @@
         map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
         var image = 'images/hotel-icon.png';
         var restimage = 'images/red-restaurant.png';
+        var parkimage = 'images/parks.png';
 
         //Creating Parse GeoPoint variable and setting up the query to fetch nearest 10 points
         var point = new Parse.GeoPoint({
@@ -141,6 +144,42 @@
             alert("Error: " + error.code + " " + error.message);
           }
         });
+
+        var parkquery = new Parse.Query(Parks);
+
+        parkquery.near("Location", point);
+        parkquery.limit(10);
+
+        //This is the select clause of the query. If successful, for each resutl, draw a marker
+        parkquery.find({
+          success : function(results) {
+            for (var resultCount = 0; resultCount < results.length; resultCount++) {
+              //Get location for current Hotspot
+              var myLatLng = new google.maps.LatLng(results[resultCount].get("Location").latitude, results[resultCount].get("Location").longitude);
+
+              //Get bandwidth and name data for Wi-Fi location from Parse. Appending current email as well
+              contentString = results[resultCount].get("Name") + "<br>" + results[resultCount].get("Address") + "<br>" + "<a href='http://" + results[resultCount].get("Website") + "'>" + results[resultCount].get("Website") + "</a>" + "<br>" + "Fee:" + results[resultCount].get("Fee") + "<br>" + "Hours: " + results[resultCount].get("Hours") + "<br>" + "Leash-Required:" + results[resultCount].get("Leash-Required");
+
+              //Create markers for each result fetched from Parse
+              parkMarkers[resultCount] = new google.maps.Marker({
+                position : myLatLng,
+                map : map,
+                icon : parkimage,
+                draggable : false,
+                animation : google.maps.Animation.DROP,
+                title : results[resultCount].get("Name")
+              });
+
+              //Attaching event listeners to each marker
+              markerClickListener(parkMarkers[resultCount], contentString);
+
+            }
+          }, //End of HotSpot query for successful fetch.
+
+          error : function(error) {
+            alert("Error: " + error.code + " " + error.message);
+          }
+        });
       }//End of Initialize map.
 
       function markerClickListener(marker, contentString) {
@@ -189,6 +228,7 @@
         Parse.initialize("LKworc4PQlQ5YL1rgYWVqWGRbPE48a6oLpDCx0Lh", "bbjJLDdBzrMgnHMtCMyq0FgYqIhyPi6TROoakWU1");
         Hotels = Parse.Object.extend("Hotels");
         Restaurants = Parse.Object.extend("Restaurants");
+        Parks = Parse.Object.extend("Parks");
         if (navigator.geolocation) {
           //alert('geolocator enabled');
           navigator.geolocation.getCurrentPosition(initializeMap, errorFunction);
@@ -218,12 +258,12 @@
     <div id="home" data-role="page" data-theme="b">
       <div data-role="header" data-theme="a" style="height:35px;">
         <h1><img src="images/pet.png" height="23" width="20"/> GoPuppyGo!</h1>
-      </div><!-- /header -->
-      <div>
+       </div>
+      <!--<div>
         <center>
           Are there any Hotels and Restaurants around where I can bring my pet?
         </center>
-      </div>
+      </div> -->
       <div data-role="content">
         <div class="ui-bar-c ui-corner-all ui-shadow" style="padding:0.45em;">
           <div id="map_canvas" class="map rounded" style="height:300px;">
@@ -243,8 +283,9 @@
      
       <div id="formdiv" style="display:none" align="center">
         <ul data-role="listview" data-theme="b" align="center">
-          <li><a href="savehotels.html" >Hotel</a></li>
-          <li><a href="restaurant.html" >Restaurant</a></li>
+          <li><a href="savehotels.html" target="_blank" align="center">Hotel</a></li>
+          <li><a href="restaurant.html" target="_blank"  align="center">Restaurant</a></li>
+          <li><a href="saveparks.html" target="_blank"  align="center">Park</a></li>
         </ul>
       </div>
       <div class="footer" data-role="footer" data-theme="a" >
