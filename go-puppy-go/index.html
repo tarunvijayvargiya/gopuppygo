@@ -34,6 +34,7 @@
       var geocoder = new google.maps.Geocoder();
       var searchbox;
       var useCurrent = true;
+      var here;
 
       //InfoWindow related vars
       var contentString;
@@ -65,6 +66,18 @@
           mapTypeId : google.maps.MapTypeId.ROADMAP
         };
         map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+        
+        here = new google.maps.Marker({
+          position: new google.maps.LatLng(curLat, curLong),
+          map: map,
+          icon: 'images/here-star.png',
+          draggable: false,
+          animation: google.maps.Animation.BOUNCE,
+          title: 'You Are Here!'
+        }); 
+        
+        here.setMap(map);
+    
         var image = 'images/hotel-icon.png';
         var restimage = 'images/red-restaurant.png';
         var parkimage = 'images/parks.png';
@@ -203,20 +216,15 @@
 
             var temp = results[0].geometry.location;
             //alert('ready to initialize map');
-            initializeMap(temp);
-
+      
+            initializeMap(temp);        
+     
           } else {
             alert("Geocode was not successful for the following reason: " + status);
           }
         });
       }
 
-
-      $('.target').textinput({
-        create : function(event, ui) {
-          codeAddress();
-        }
-      });
 
       function errorFunction() {
         alert('Browser does not support location data');
