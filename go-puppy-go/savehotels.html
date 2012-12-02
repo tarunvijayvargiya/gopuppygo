@@ -1,11 +1,11 @@
-<!DOCTYPE html>  
+<!DOCTYPE html>
 <html>
   <head>
-    <title>Share Hotel's Info</title>  
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>  
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>    
+    <title>Share Hotel's Info</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    
+
     <!-- CSS -->
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
     <!--<link type="text/css" rel="stylesheet" href="css/styles.css" media="screen" /> !-->
@@ -13,226 +13,227 @@
     <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
     <script type="text/javascript" src="js/jquery.validate.min.js"></script>
-    
+
     <script type = "text/javascript"src="http://www.parsecdn.com/js/parse-1.1.5.min.js"></script>
     <script type="text/javascript"
-      src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBVYmtKrniJdpYFLa4-QMXaWYemedvw1bA&sensor=true">
-    </script>
-    <script type="text/javascript">  
+    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBVYmtKrniJdpYFLa4-QMXaWYemedvw1bA&sensor=true"></script>
+    <script type="text/javascript">
       //For geocoding address given by user
       var geocoder;
 
       //For storing current location
       var curLat;
-          var curLong;
-          var gotLocation = false;
+      var curLong;
+      var gotLocation = false;
 
       //point stores the lat. and long. of Wi-Fi
-      var point;  
+      var point;
       var address;
-      
+
       var Hotels;
       var hotels;
-      
 
-      function initialize() {  
-        geocoder = new google.maps.Geocoder();  
+      function initialize() {
+        geocoder = new google.maps.Geocoder();
         document.getElementById("Name").focus();
-                //Initialize Parse
+        //Initialize Parse
         Parse.initialize("LKworc4PQlQ5YL1rgYWVqWGRbPE48a6oLpDCx0Lh", "bbjJLDdBzrMgnHMtCMyq0FgYqIhyPi6TROoakWU1");
 
         Hotels = Parse.Object.extend("Hotels");
         hotels = new Hotels();
-      }  
-      
-      function mainFunction() {     
-    
-        if(!gotLocation){
+      }
+
+      function mainFunction() {
+
+        if (!gotLocation) {
           //Only get the address from the form if current location has not been selected
           var address = (document.getElementById("Address").value);
           //Here we get the address and then return the latitude and longitude
-          geocoder.geocode({ 'address': address}, function(results, status) {  
+          geocoder.geocode({
+            'address' : address
+          }, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
               alert('geocoder OK');
-              point = new Parse.GeoPoint({latitude:results[0].geometry.location.lat(),longitude:results[0].geometry.location.lng()});
+              point = new Parse.GeoPoint({
+                latitude : results[0].geometry.location.lat(),
+                longitude : results[0].geometry.location.lng()
+              });
               saveHotel();
+            } else {
+              alert("Geocode was not successful for the following reason: " + status);
             }
-            else {  
-              alert("Geocode was not successful for the following reason: " + status);  
-            } 
           });
-        }
-        else{
+        } else {
           saveHotel();
-        } 
+        }
       }
 
-      function saveHotel(){
+      function saveHotel() {
         //alert('saveHotel()');
-         //Getting the rest of the information from the form
-          var name=document.getElementById("Name").value;
-          var restrictions=(document.getElementById("Restrictions").value);
-          var Website=(document.getElementById("Website").value);
-                    var phone=(document.getElementById("Phone").value);
-                    var address=(document.getElementById("Address").value);
-                    
-        
-          //Setting data to Hotspot object
-          hotels.set("Name",name);
-          hotels.set("Restrictions",restrictions);
-          hotels.set("Address",address);
-          hotels.set("Website",Website);
-          hotels.set("Phone",phone);
-          hotels.set("Location", point);
-          hotels.set("Pet_fee",pet_fee);
-          hotels.set("Price",price);
-                    //Savin,g to Hotspot table
-          hotels.save(null,{
-            success: function(Hotels){
-              alert("Data saved successfully on GoPuppyGo"); //should change these to jquery alerts.
-            },
-            error: function(Hotels,error){
-              alert("Could not save data on GoPuppyGo");
-            }
-          });
+        //Getting the rest of the information from the form
+        var name = document.getElementById("Name").value;
+        var restrictions = (document.getElementById("Restrictions").value);
+        var Website = (document.getElementById("Website").value);
+        var phone = (document.getElementById("Phone").value);
+        var address = (document.getElementById("Address").value);
+        var pet_fee = (document.getElementById("Pet_Fee").value);
+        var price = (document.getElementById("Price").value);
+        //Setting data to Hotspot object
+        hotels.set("Name", name);
+        hotels.set("Restrictions", restrictions);
+        hotels.set("Address", address);
+        hotels.set("Website", Website);
+        hotels.set("Phone", phone);
+        hotels.set("Location", point);
+        hotels.set("Pet_fee", pet_fee);
+        hotels.set("Price", price);
+        //Savin,g to Hotspot table
+        hotels.save(null, {
+          success : function(Hotels) {
+            alert("Data saved successfully on GoPuppyGo");
+            //should change these to jquery alerts.
+          },
+          error : function(Hotels, error) {
+            alert("Could not save data on GoPuppyGo");
+          }
+        });
       }
 
-      
+      //Basic validation for each form element.
+      $('#wifi-form').validate({
+        'rules' : {
+          'Name' : {'required':true},
 
-        //Basic validation for each form element.
-        $('#wifi-form').validate({
-              'rules':{
-                  'Name':'required',
-                  
-                'Restrictions':{
-                'required':true,
-                  },
-                  'Address':{
-                  'required':true,
-                  },
-                'Website':{
-                'required':true,
-                },
-                
-                  'Phone':{
-                  'required':true,
-                },
-                  'Pet_fee':{
-                  'required':true,
-                  },
-                  
-                  'Price':{
-                  'required':true,
-                  }
-                } 
-                
-            });
-      
-      
-        function successLoc(position){
-              curLat = position.coords.latitude;
-            curLong = position.coords.longitude;
-            gotLocation = true;
-            locationLookup();
+          'Restrictions' : {
+            'required' : true,
+          },
+          'Address' : {
+            'required' : true,
+          },
+          'Website' : {
+            'required' : true,
+          },
+
+          'Phone' : {
+            'required' : true,
+          },
+          'Pet_fee' : {
+            'required' : true,
+          },
+
+          'Price' : {
+            'required' : true,
           }
+        }
 
-          function errorLoc(){
+      });
+
+      function successLoc(position) {
+        curLat = position.coords.latitude;
+        curLong = position.coords.longitude;
+        gotLocation = true;
+        locationLookup();
+      }
+
+      function errorLoc() {
         //Get user location from I.P.address.
         if (google.loader.ClientLocation != null) {
           curLat = google.loader.ClientLocation.latitude;
           curLong = google.loader.ClientLocation.longitude;
-        } 
-        else {
+        } else {
           curLat = 41.900233;
           curLong = -87.625786;
         }
         gotLocation = true;
-          }
+      }
 
-          //Reverse geocoding. Doing it here to ensure that the asynchronous data fetching happens successfully
-          function locationLookup(){
-            //This is reverse geo-coding, we convert the current location to an address
+      //Reverse geocoding. Doing it here to ensure that the asynchronous data fetching happens successfully
+      function locationLookup() {
+        //This is reverse geo-coding, we convert the current location to an address
         var latlng = new google.maps.LatLng(curLat, curLong);
-        geocoder.geocode({'latLng': latlng}, function(results, status) {  
+        geocoder.geocode({
+          'latLng' : latlng
+        }, function(results, status) {
           if (status == google.maps.GeocoderStatus.OK) {
             address = results[0].formatted_address;
+          } else {
+            alert("Could not convert location to address");
           }
-          else {  
-            alert("Could not convert location to address");  
-          } 
 
         });
-        point = new Parse.GeoPoint({latitude:curLat,longitude:curLong});
-          }
+        point = new Parse.GeoPoint({
+          latitude : curLat,
+          longitude : curLong
+        });
+      }
 
-    </script>  
-  </head>  
-  <body onload="initialize()"> 
+    </script>
+  </head>
+  <body onload="initialize()">
     <div data-role="page" id="page1"  data-theme="b">
       <div data-role="header" data-theme="a" style="height:35px;">
         <h1>Hotel's Info</h1>
       </div><!-- /header -->
-      
-      <div data-role="content" id="contentMain" name="contentMain"> 
+
+      <div data-role="content" id="contentMain" name="contentMain">
         <form id="hotel-form">
-        
+
           <div id="details" data-role="fieldcontain">
             <h4 >Tell us about the hotel.</h4>
 
             <label for="Name" class="ui-hidden-accessible">Name:</label>
-            <input id="Name" name="Name" type="text" value="" placeholder="Hotel Name" data-mini="true"/><br>
+            <input id="Name" name="Name" type="text" value="" placeholder="Hotel Name" data-mini="true"/>
+            <br>
 
             <label for="Restrictions" class="ui-hidden-accessible">Restrictions:</label>
-            <input id="Restrictions" name="Restrictions" type="text" placeholder="Add restrictions" data-mini="true"/><br>
+            <input id="Restrictions" name="Restrictions" type="text" placeholder="Add restrictions" data-mini="true"/>
+            <br>
 
             <label for="Address" class="ui-hidden-accessible">Address:</label>
             <input id="Address" name="Address" type="text" placeholder="Address" data-mini="true"/>
-            
+
             <label for="Phone" class="ui-hidden-accessible">Phone:</label>
             <input id="Phone" name="Phone" type="text" placeholder="Phone" data-mini="true"/>
-            
+
             <label for="Pet_fee" class="ui-hidden-accessible">Pet_fee:</label>
             <input id="Pet_fee" name="Pet_fee" type="text" placeholder="Pet_fee" data-mini="true"/>
-            
+
             <label for="Price" class="ui-hidden-accessible">Price:</label>
             <input id="Price" name="Price" type="text" placeholder="Price" data-mini="true"/>
-                
 
-
-          <!--<div id="location" data-role="fieldcontain" data-theme="b">
+            <!--<div id="location" data-role="fieldcontain" data-theme="b">
             <label for="UsrCurLoc"><b>Use current location:</b></label>
             <select name="UsrCurLoc" id="usrCurLoc" data-mini="true" data-role="slider" data-theme="c" data-track-theme="a">
-                  <option value="off">No</option>
-                  <option value="on">Yes</option>
-           </select><!-->
+            <option value="off">No</option>
+            <option value="on">Yes</option>
+            </select><!-->
 
-              <label for="Website" class="ui-hidden-accessible">Website:</label>
-              <input id="Website" name="Website" type="text" value="" placeholder="Website" data-mini="true"/>
+            <label for="Website" class="ui-hidden-accessible">Website:</label>
+            <input id="Website" name="Website" type="text" value="" placeholder="Website" data-mini="true"/>
           </div>
-          
-          <!--<div id="contact" data-role="fieldcontain"> 
-            <h4 style="font-size:16px;">How can buyers reach you?</h4>
 
-            <label for="Email" class="ui-hidden-accessible">Email:</label>
-            <input id="Email" name="Email" type="text" value="" placeholder="Email (required)" data-mini="true"/><br>
+          <!--<div id="contact" data-role="fieldcontain">
+          <h4 style="font-size:16px;">How can buyers reach you?</h4>
 
-            <label for="Year" class="ui-hidden-accessible">Phone:</label>
-            <input id="Year" name="Year" type="text" value="" placeholder="Your year of birth (required)" data-mini="true"/>
-            <label for="Year" style="font-size:12px;"><b>*You'll need this to remove your listing</b></label><br>
+          <label for="Email" class="ui-hidden-accessible">Email:</label>
+          <input id="Email" name="Email" type="text" value="" placeholder="Email (required)" data-mini="true"/><br>
 
-            <label for="Phone" class="ui-hidden-accessible">Phone:</label>
-            <input id="Phone" name="Phone" type="text" value="" placeholder="Phone Number (optional)" data-mini="true"/>
+          <label for="Year" class="ui-hidden-accessible">Phone:</label>
+          <input id="Year" name="Year" type="text" value="" placeholder="Your year of birth (required)" data-mini="true"/>
+          <label for="Year" style="font-size:12px;"><b>*You'll need this to remove your listing</b></label><br>
 
+          <label for="Phone" class="ui-hidden-accessible">Phone:</label>
+          <input id="Phone" name="Phone" type="text" value="" placeholder="Phone Number (optional)" data-mini="true"/>
 
           </div><!-->
-            
-          <input type="button" value="Submit" onclick="mainFunction()" data-theme="a" data-mini="true"/>    
-  
-          </form>
+
+          <input type="button" value="Submit" onclick="mainFunction()" data-theme="a" data-mini="true"/>
+
+        </form>
       </div>
 
       <div class="footer" data-role="footer" data-theme="a" >
-      &copy; 2012 GoPuppyGo Alpha.
+        &copy; 2012 GoPuppyGo Alpha.
       </div><!-- /footer -->
     </div>
   </body>

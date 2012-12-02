@@ -45,9 +45,9 @@
 
       //Temp. variable to store email from the Users table
       var curEmail = "No Contact";
-
+      var welcome;
       function initializeMap(position) {
-
+        
         var curLat;
         var curLong;
         if (useCurrent == true) {
@@ -171,7 +171,7 @@
               var myLatLng = new google.maps.LatLng(results[resultCount].get("Location").latitude, results[resultCount].get("Location").longitude);
 
               //Get bandwidth and name data for Wi-Fi location from Parse. Appending current email as well
-              contentString = results[resultCount].get("Name") + "<br>" + results[resultCount].get("Address") + "<br>" + "<a href='http://" + results[resultCount].get("Website") + "'>" + results[resultCount].get("Website") + "</a>" + "<br>" + "Fee:" + results[resultCount].get("Fee") + "<br>" + "Hours: " + results[resultCount].get("Hours") + "<br>" + "Leash-Required:" + results[resultCount].get("Leash-Required");
+              contentString = results[resultCount].get("Name") + "<br>" + results[resultCount].get("Address") + "<br>" + "<a href='http://" + results[resultCount].get("Website") + "'>" + results[resultCount].get("Website") + "</a>" + "<br>" + "Fee: " + results[resultCount].get("Fee") + "<br>" + "Hours: " + results[resultCount].get("Hours") + "<br>" + "Leash-Required: " + results[resultCount].get("Leash_Required");
 
               //Create markers for each result fetched from Parse
               parkMarkers[resultCount] = new google.maps.Marker({
@@ -203,6 +203,9 @@
       }
 
       function codeAddress() {
+        alert("coding");
+        welcome.style.display="none";
+        document.getElementById("map_canvas").style.display="block";
         //alert('codeAddress');
         useCurrent = false;
         input = document.getElementById("target");
@@ -232,6 +235,7 @@
       }
 
       function initialize() {
+        welcome = document.getElementById("welcome");
         //alert('initializing');
         Parse.initialize("LKworc4PQlQ5YL1rgYWVqWGRbPE48a6oLpDCx0Lh", "bbjJLDdBzrMgnHMtCMyq0FgYqIhyPi6TROoakWU1");
         Hotels = Parse.Object.extend("Hotels");
@@ -264,8 +268,8 @@
 
   <body onload="initialize()">
     <div id="home" data-role="page" data-theme="b">
-      <div data-role="header" data-theme="a" style="height:35px;">
-        <h1><img src="images/pet.png" height="23" width="20"/> GoPuppyGo!</h1>
+      <div data-role="header" data-theme="a" style="height:36px;" align="center">
+        <img src="images/pet.png" height="25" width="21"style="margin-top:6px"></img>GoPuppyGo!
        </div>
       <!--<div>
         <center>
@@ -274,11 +278,12 @@
       </div> -->
       <div data-role="content">
         <div class="ui-bar-c ui-corner-all ui-shadow" style="padding:0.45em;">
-          <div id="map_canvas" class="map rounded" style="height:300px;">
-            <span>
-              <p>
-                Enter a location and press 'relocate'
-              </p></span>
+          <div id="welcome" style="textalign:center; height:300px;" align="center">
+            <h2> "Take your best friend everywhere!" </h2><br/>
+            <img src="images/welcomepic.png" style="height:125px;width:115px;"/><br/>
+            <p>Enter an address and click Search Location to view pet-friendly parks, hotels, and restaurants in the area</p>
+          </div>
+          <div id="map_canvas" class="map rounded" style="display:none; height:300px;">
           </div>
         </div>
       </div><!-- adding the map showing current position of user -->
@@ -291,9 +296,9 @@
      
       <div id="formdiv" style="display:none" align="center">
         <ul data-role="listview" data-theme="b" align="center">
-          <li><a href="savehotels.html" target="_blank" align="center">Hotel</a></li>
-          <li><a href="restaurant.html" target="_blank"  align="center">Restaurant</a></li>
-          <li><a href="saveparks.html" target="_blank"  align="center">Park</a></li>
+          <li><a href="savehotels.html" align="center" data-ajax="false">Hotel</a></li>
+          <li><a href="restaurant.html" align="center" data-ajax="false">Restaurant</a></li>
+          <li><a href="saveparks.html"  align="center" data-ajax="false">Park</a></li>
         </ul>
       </div>
       <div class="footer" data-role="footer" data-theme="a" >
@@ -301,7 +306,7 @@
           <!--<a data-role="button" data-theme="a" data-ajax="false">Hotels</a>
           <a data-role="button" data-theme="a" data-ajax="false">Restaurants</a>-->
           <a data-role="button" data-theme="a" data-ajax="false" onclick="toggleFormLinks()">Submit New Data</a>
-          <a data-role="button" data-theme="a" data-ajax="false" onclick="codeAddress()">Change Location</a>
+          <a data-role="button" data-theme="a" data-ajax="false" onclick="codeAddress()">Search Location</a>
         </div>
       </div><!-- /footer -->
     </div><!-- /page -->
