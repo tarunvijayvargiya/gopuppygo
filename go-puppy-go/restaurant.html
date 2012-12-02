@@ -75,6 +75,7 @@
           var Website=(document.getElementById("Website").value);
                     var phone=(document.getElementById("Phone").value);
                     var address=(document.getElementById("Address").value);
+                    var price=(document.getElementById("Price").value);
                     
         
           //Setting data to Hotspot object
@@ -84,6 +85,7 @@
           restaurants.set("Website",Website);
           restaurants.set("Phone",phone);
           restaurants.set("Location", point);
+          restaurants.set("Price",price);
                     //Saving to Hotspot table
           restaurants.save(null,{
             success: function(Restaurants){
@@ -113,6 +115,9 @@
                 },
                 
                   'Phone':{
+                  'required':true,
+                },
+                'Price':{
                   'required':true,
                 },
                 } 
@@ -180,6 +185,9 @@
             
             <label for="Phone" class="ui-hidden-accessible">Phone:</label>
             <input id="Phone" name="Phone" type="text" placeholder="Phone" data-mini="true"/>
+
+            <label for="Price" class="ui-hidden-accessible">Price:</label>
+            <input id="Price" name="Price" type="text" placeholder="Price" data-mini="true"/>
                 
 
 

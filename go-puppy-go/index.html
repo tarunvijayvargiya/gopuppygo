@@ -135,7 +135,7 @@
               var myLatLng = new google.maps.LatLng(results[resultCount].get("Location").latitude, results[resultCount].get("Location").longitude);
 
               //Get bandwidth and name data for Wi-Fi location from Parse. Appending current email as well
-              contentString = results[resultCount].get("Name") + "<br>" + results[resultCount].get("Address") + "<br>" + "<a href='http://" + results[resultCount].get("Website") + "'>" + results[resultCount].get("Website") + "</a>" + "<br>" + results[resultCount].get("Phone") + "<br>" + "Cuisine: " + results[resultCount].get("Cuisine");
+              contentString = results[resultCount].get("Name") + "<br>" + results[resultCount].get("Address") + "<br>" + "<a href='http://" + results[resultCount].get("Website") + "'>" + results[resultCount].get("Website") + "</a>" + "<br>" + results[resultCount].get("Phone") + "<br>" + "Cuisine: " + results[resultCount].get("Cuisine") + "<br>" + "Price rating: " + results[resultCount].get("Price");
 
               //Create markers for each result fetched from Parse
               restMarkers[resultCount] = new google.maps.Marker({
