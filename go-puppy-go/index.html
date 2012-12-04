@@ -203,7 +203,6 @@
       }
 
       function codeAddress() {
-        
         welcome.style.display="none";
         document.getElementById("map_canvas").style.display="block";
         //alert('codeAddress');
@@ -216,19 +215,14 @@
           'address' : Address
         }, function(results, status) {
           if (status == google.maps.GeocoderStatus.OK) {
-
             var temp = results[0].geometry.location;
             //alert('ready to initialize map');
-      
             initializeMap(temp);        
-     
           } else {
             alert("Geocode was not successful for the following reason: " + status);
           }
         });
       }
-
-
       function errorFunction() {
         alert('Browser does not support location data');
         gotLocation = false;
