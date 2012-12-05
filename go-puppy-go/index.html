@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
   <head>
@@ -257,320 +256,9 @@
         } 
       }
       
-
-    </script>
-  </head>
-
-  <body onload="initialize()">
-    <div id="home" data-role="page" data-theme="b">
-      <div data-role="header" data-theme="a" style="height:36px;" align="center">
-        <img src="images/pet.png" height="25" width="21"style="margin-top:6px"></img>GoPuppyGo!
-       </div>
-      <!--<div>
-        <center>
-          Are there any Hotels and Restaurants around where I can bring my pet?
-        </center>
-      </div> -->
-      <div data-role="content">
-        <div class="ui-bar-c ui-corner-all ui-shadow" style="padding:0.45em;">
-          <div id="welcome" style="textalign:center; height:300px;" align="center">
-            <h2> "Take your best friend everywhere!" </h2><br/>
-            <img src="images/welcomepic.png" style="height:125px;width:115px;"/><br/>
-            <p>Enter an address and click Search Location to view pet-friendly parks, hotels, and restaurants in the area</p>
-          </div>
-          <div id="map_canvas" class="map rounded" style="display:none; height:300px;">
-          </div>
-        </div>
-      </div><!-- adding the map showing current position of user -->
-      <div id="search-panel" align="center">
-        <input type="search"
-        style="width:80%;"
-        id="target"
-        placeholder="Search Address" />
-      </div>
-     
-      <div id="formdiv" style="display:none" align="center">
-        <ul data-role="listview" data-theme="b" align="center">
-
-          <li><a href="savehotels.html" align="center" data-ajax="false">Hotel</a></li>
-          <li><a href="restaurant.html" align="center" data-ajax="false">Restaurant</a></li>
-          <li><a href="saveparks.html"  align="center" data-ajax="false">Park</a></li>
-
-        </ul>
-      </div>
-      <div class="footer" data-role="footer" data-theme="a" >
-        <div data-role="controlgroup" data-type="horizontal">
-          <!--<a data-role="button" data-theme="a" data-ajax="false">Hotels</a>
-          <a data-role="button" data-theme="a" data-ajax="false">Restaurants</a>-->
-          <a data-role="button" data-theme="a" data-ajax="false" onclick="toggleFormLinks()">Submit New Data</a>
-          <a data-role="button" data-theme="a" data-ajax="false" onclick="codeAddress()">Search Location</a>
-        </div>
-      </div><!-- /footer -->
-    </div><!-- /page -->
-  </body>
-=======
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>GoPuppyGo</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link type="text/css" rel="stylesheet" href="css/launch.css" media="screen" />
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
-    <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
-    <script type="text/javascript"
-    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBVYmtKrniJdpYFLa4-QMXaWYemedvw1bA&sensor=true"></script>
-
-    <script type="text/javascript" src="js/jquery.ui.map.js"></script>
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
-    <!--The jsapi allows for I.P. address based look-up -->
-    <script src="http://www.google.com/jsapi" language="javascript"></script>
-    <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.1.5.min.js"></script>
-
-    <script type="text/javascript">
-      //Global variables
-      //Flags and Parse constants
-      var gotLocation = false;
-      //var Hotspots;
-      var Hotels;
-      var Restaurants;
-      var Parks;
-      //Map related globals
-      var mapOptions;
-      var map;
-      var markers = new Array();
-      var restMarkers = new Array();
-      var parkMarkers = new Array();
-      var input;
-      var geocoder = new google.maps.Geocoder();
-      var searchbox;
-      var useCurrent = true;
-      var here;
-
-      //InfoWindow related vars
-      var contentString;
-      var singleInfoWindow = new google.maps.InfoWindow();
-      var contentStringArr = new Array();
-      var emailStringArr = new Array();
-      var idArr = new Array();
-
-      //Temp. variable to store email from the Users table
-      var curEmail = "No Contact";
-      var welcome;
-      function initializeMap(position) {
-        
-        var curLat;
-        var curLong;
-        if (useCurrent == true) {
-
-          curLat = position.coords.latitude;
-          curLong = position.coords.longitude;
-          //alert(curLat + '\n' + curLong);
-        } else {
-
-          curLat = position.lat();
-          curLong = position.lng();
-        }
-        mapOptions = {
-          center : new google.maps.LatLng(curLat, curLong),
-          zoom : 14,
-          mapTypeId : google.maps.MapTypeId.ROADMAP
-        };
-        map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-        
-        here = new google.maps.Marker({
-          position: new google.maps.LatLng(curLat, curLong),
-          map: map,
-          icon: 'images/here-star.png',
-          draggable: false,
-          animation: google.maps.Animation.BOUNCE,
-          title: 'You Are Here!'
-        }); 
-        
-        here.setMap(map);
-    
-        var image = 'images/hotel-icon.png';
-        var restimage = 'images/red-restaurant.png';
-        var parkimage = 'images/parks.png';
-
-        //Creating Parse GeoPoint variable and setting up the query to fetch nearest 10 points
-        var point = new Parse.GeoPoint({
-          latitude : curLat,
-          longitude : curLong
-        });
-        var query = new Parse.Query(Hotels);
-        query.near("Location", point);
-        query.limit(10);
-
-        //This is the select clause of the query. If successful, for each resutl, draw a marker
-        query.find({
-          success : function(results) {
-            for (var resultCount = 0; resultCount < results.length; resultCount++) {
-              //Get location for current Hotspot
-              var myLatLng = new google.maps.LatLng(results[resultCount].get("Location").latitude, results[resultCount].get("Location").longitude);
-
-              //Get bandwidth and name data for Wi-Fi location from Parse. Appending current email as well
-              contentString = results[resultCount].get("Name") + "<br>" + results[resultCount].get("Address") + "<br>" + "<a href='http://" + results[resultCount].get("Website") + "'>" + results[resultCount].get("Website") + "</a>" + "<br>" + results[resultCount].get("Phone") + "<br>" + "Extra fee for pets? " + results[resultCount].get("Pet_fee") + "<br>" + "Price rating: " + results[resultCount].get("Price");
-
-              //Create markers for each result fetched from Parse
-              markers[resultCount] = new google.maps.Marker({
-                position : myLatLng,
-                map : map,
-                icon : image,
-                draggable : false,
-                animation : google.maps.Animation.DROP,
-                title : results[resultCount].get("Name")
-              });
-
-              //Attaching event listeners to each marker
-              markerClickListener(markers[resultCount], contentString);
-
-            }
-          }, //End of HotSpot query for successful fetch.
-
-          error : function(error) {
-            alert("Error: " + error.code + " " + error.message);
-          }
-        });
-
-        var restquery = new Parse.Query(Restaurants);
-
-        restquery.near("Location", point);
-        restquery.limit(10);
-
-        //This is the select clause of the query. If successful, for each resutl, draw a marker
-        restquery.find({
-          success : function(results) {
-            for (var resultCount = 0; resultCount < results.length; resultCount++) {
-              //Get location for current Hotspot
-              var myLatLng = new google.maps.LatLng(results[resultCount].get("Location").latitude, results[resultCount].get("Location").longitude);
-
-              //Get bandwidth and name data for Wi-Fi location from Parse. Appending current email as well
-              contentString = results[resultCount].get("Name") + "<br>" + results[resultCount].get("Address") + "<br>" + "<a href='http://" + results[resultCount].get("Website") + "'>" + results[resultCount].get("Website") + "</a>" + "<br>" + results[resultCount].get("Phone") + "<br>" + "Cuisine: " + results[resultCount].get("Cuisine") + "<br>" + "Price rating: " + results[resultCount].get("Price");
-
-              //Create markers for each result fetched from Parse
-              restMarkers[resultCount] = new google.maps.Marker({
-                position : myLatLng,
-                map : map,
-                icon : restimage,
-                draggable : false,
-                animation : google.maps.Animation.DROP,
-                title : results[resultCount].get("Name")
-              });
-
-              //Attaching event listeners to each marker
-              markerClickListener(restMarkers[resultCount], contentString);
-
-            }
-          }, //End of HotSpot query for successful fetch.
-
-          error : function(error) {
-            alert("Error: " + error.code + " " + error.message);
-          }
-        });
-
-        var parkquery = new Parse.Query(Parks);
-
-        parkquery.near("Location", point);
-        parkquery.limit(10);
-
-        //This is the select clause of the query. If successful, for each resutl, draw a marker
-        parkquery.find({
-          success : function(results) {
-            for (var resultCount = 0; resultCount < results.length; resultCount++) {
-              //Get location for current Hotspot
-              var myLatLng = new google.maps.LatLng(results[resultCount].get("Location").latitude, results[resultCount].get("Location").longitude);
-
-              //Get bandwidth and name data for Wi-Fi location from Parse. Appending current email as well
-              contentString = results[resultCount].get("Name") + "<br>" + results[resultCount].get("Address") + "<br>" + "<a href='http://" + results[resultCount].get("Website") + "'>" + results[resultCount].get("Website") + "</a>" + "<br>" + "Fee: " + results[resultCount].get("Fee") + "<br>" + "Hours: " + results[resultCount].get("Hours") + "<br>" + "Leash-Required: " + results[resultCount].get("Leash_Required");
-
-              //Create markers for each result fetched from Parse
-              parkMarkers[resultCount] = new google.maps.Marker({
-                position : myLatLng,
-                map : map,
-                icon : parkimage,
-                draggable : false,
-                animation : google.maps.Animation.DROP,
-                title : results[resultCount].get("Name")
-              });
-
-              //Attaching event listeners to each marker
-              markerClickListener(parkMarkers[resultCount], contentString);
-
-            }
-          }, //End of HotSpot query for successful fetch.
-
-          error : function(error) {
-            alert("Error: " + error.code + " " + error.message);
-          }
-        });
-      }//End of Initialize map.
-
-      function markerClickListener(marker, contentString) {
-        google.maps.event.addListener(marker, 'click', function() {
-          singleInfoWindow.setContent(contentString);
-          singleInfoWindow.open(map, marker);
-        });
-      }
-
-      function codeAddress() {
-        
-        welcome.style.display="none";
+      function toggleMap() {
         document.getElementById("map_canvas").style.display="block";
-        //alert('codeAddress');
-        useCurrent = false;
-        input = document.getElementById("target");
-        var Address = input.value;
-        //alert('created Address');
-        //alert('Address = ' + Address);
-        geocoder.geocode({
-          'address' : Address
-        }, function(results, status) {
-          if (status == google.maps.GeocoderStatus.OK) {
-
-            var temp = results[0].geometry.location;
-            //alert('ready to initialize map');
-      
-            initializeMap(temp);        
-     
-          } else {
-            alert("Geocode was not successful for the following reason: " + status);
-          }
-        });
-      }
-
-
-      function errorFunction() {
-        alert('Browser does not support location data');
-        gotLocation = false;
-      }
-
-      function initialize() {
-        welcome = document.getElementById("welcome");
-        //alert('initializing');
-        Parse.initialize("LKworc4PQlQ5YL1rgYWVqWGRbPE48a6oLpDCx0Lh", "bbjJLDdBzrMgnHMtCMyq0FgYqIhyPi6TROoakWU1");
-        Hotels = Parse.Object.extend("Hotels");
-        Restaurants = Parse.Object.extend("Restaurants");
-        Parks = Parse.Object.extend("Parks");
-        if (navigator.geolocation) {
-          //alert('geolocator enabled');
-          navigator.geolocation.getCurrentPosition(initializeMap, errorFunction);
-          gotLocation = true;
-        } else {
-          alert('Error: No location');
-        }
-
-      }
-
-      function toggleFormLinks() {
-        var formdiv = document.getElementById("formdiv");
-        if (formdiv.style.display == 'none') {
-          formdiv.style.display = 'block';
-          window.scroll(0,100000);
-        }
-        else {
-          formdiv.style.display ='none';
-        } 
+        welcome.style.display = "none";
       }
       
 
@@ -581,8 +269,7 @@
     <div id="home" data-role="page" data-theme="b">
       <div data-role="header" data-theme="a" style="height:36px;" align="center">
         <img src="images/pet.png" height="25" width="21"style="margin-top:6px"></img>GoPuppyGo!
-         <a href="mailto:tarunvijayvargiya@gmail.com" align="right">Contact us</a>
-         
+        <a href="mailto:tarunvijayvargiya@gmail.com" align="right">Contact us</a>
        </div>
       <!--<div>
         <center>
@@ -592,9 +279,10 @@
       <div data-role="content">
         <div class="ui-bar-c ui-corner-all ui-shadow" style="padding:0.45em;">
           <div id="welcome" style="textalign:center; height:300px;" align="center">
-            <h2> "Take your best friend everywhere!" </h2><br/>
+            <h4> "Take your best friend everywhere!" </h4><br/>
             <img src="images/welcomepic.png" style="height:125px;width:115px;"/><br/>
-            <p>Enter an address and click Search Location to view pet-friendly parks, hotels, and restaurants in the area</p>
+            <p>Enter an address and click Search Location to view nearby pet-friendly parks, hotels, and restaurants, or</p>
+            <a data-role="button" data-theme="a" data-ajax="false" onclick="toggleMap()">Use Current Location</a>
           </div>
           <div id="map_canvas" class="map rounded" style="display:none; height:300px;">
           </div>
@@ -626,5 +314,4 @@
       </div><!-- /footer -->
     </div><!-- /page -->
   </body>
->>>>>>> 739d91d6a9a2f14827b395fe50708949ef78b2ac
 </html>
