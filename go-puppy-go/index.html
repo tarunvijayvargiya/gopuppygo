@@ -35,7 +35,7 @@
       var searchbox;
       var useCurrent = true;
       var here;
-
+      var initialized = 0;
       //InfoWindow related vars
       var contentString;
       var singleInfoWindow = new google.maps.InfoWindow();
@@ -203,6 +203,9 @@
       }
 
       function codeAddress() {
+        if (initialized == 0) {
+          initialize();
+        }
         welcome.style.display="none";
         document.getElementById("map_canvas").style.display="block";
         //alert('codeAddress');
@@ -229,7 +232,12 @@
       }
 
       function initialize() {
-        welcome = document.getElementById("welcome");
+
+        welcome = document.getElementById("welcome");        
+        if (initialized == 0) {
+          initialized = 1;
+          toggleMap();
+        }
         //alert('initializing');
         Parse.initialize("LKworc4PQlQ5YL1rgYWVqWGRbPE48a6oLpDCx0Lh", "bbjJLDdBzrMgnHMtCMyq0FgYqIhyPi6TROoakWU1");
         Hotels = Parse.Object.extend("Hotels");
@@ -242,7 +250,7 @@
         } else {
           alert('Error: No location');
         }
-
+        
       }
 
       function toggleFormLinks() {
@@ -265,7 +273,7 @@
     </script>
   </head>
 
-  <body onload="initialize()">
+  <body>
     <div id="home" data-role="page" data-theme="b">
       <div data-role="header" data-theme="a" style="height:36px;" align="center">
         <img src="images/pet.png" height="25" width="21"style="margin-top:6px"></img>GoPuppyGo!
@@ -282,7 +290,7 @@
             <h4> "Take your best friend everywhere!" </h4><br/>
             <img src="images/welcomepic.png" style="height:100px;width:92px;"/><br/>
             <p>Enter an address and click Search Location to view nearby pet-friendly parks, hotels, and restaurants, or</p>
-            <a data-role="button" data-theme="a" data-ajax="false" onclick="toggleMap()">Use Current Location</a>
+            <a data-role="button" data-theme="a" data-ajax="false" onclick="initialize()">Use Current Location</a>
           </div>
           <div id="map_canvas" class="map rounded" style="display:none; height:300px;">
           </div>
