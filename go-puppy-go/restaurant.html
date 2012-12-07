@@ -44,7 +44,7 @@
       }
 
       function mainFunction() {
-        alert('in main function');
+        //alert('in main function');
         if (!gotLocation) {
           //Only get the address from the form if current location has not been selected
           var address = (document.getElementById("Address").value);
@@ -53,7 +53,7 @@
             'address' : address
           }, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
-              alert('geocoder OK');
+             // alert('geocoder OK');
               point = new Parse.GeoPoint({
                 latitude : results[0].geometry.location.lat(),
                 longitude : results[0].geometry.location.lng()
@@ -89,11 +89,11 @@
         //Saving to Hotspot table
         restaurants.save(null, {
           success : function(Restaurants) {
-            alert("Data saved successfully on GoPuppyGo");
+            alert("Thank you for your contributions to GoPuppyGo!");
             //should change these to jquery alerts.
           },
           error : function(Restaurants, error) {
-            alert("Could not save data on GoPuppyGo");
+            alert("Something wrong happens on GoPuppyGo and we are sorry for that~");
           }
         });
       }

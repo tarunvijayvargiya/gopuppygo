@@ -53,7 +53,7 @@
             'address' : address
           }, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
-              alert('geocoder OK');
+             // alert('geocoder OK');
               point = new Parse.GeoPoint({
                 latitude : results[0].geometry.location.lat(),
                 longitude : results[0].geometry.location.lng()
@@ -91,11 +91,11 @@
         //Saving to Hotspot table
         parks.save(null, {
           success : function(Parks) {
-            alert("Data saved successfully on GoPuppyGo");
+            alert("Thank you for your contributions to GoPuppyGo!");
             //should change these to jquery alerts.
           },
           error : function(Parks, error) {
-            alert("Could not save data on GoPuppyGo");
+            alert("Something wrong happens on GoPuppyGo and we are sorry for that~");
           }
         });
       }

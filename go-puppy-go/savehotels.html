@@ -44,7 +44,7 @@
       }
 
       function mainFunction() {
-
+        //alert('in main function');
         if (!gotLocation) {
           //Only get the address from the form if current location has not been selected
           var address = (document.getElementById("Address").value);
@@ -53,7 +53,7 @@
             'address' : address
           }, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
-              alert('geocoder OK');
+              //alert('geocoder OK');
               point = new Parse.GeoPoint({
                 latitude : results[0].geometry.location.lat(),
                 longitude : results[0].geometry.location.lng()
@@ -69,7 +69,7 @@
       }
 
       function saveHotel() {
-        //alert('saveHotel()');
+        
         //Getting the rest of the information from the form
         var name = document.getElementById("Name").value;
         var restrictions = (document.getElementById("Restrictions").value);
@@ -78,23 +78,26 @@
         var address = (document.getElementById("Address").value);
         var pet_fee = (document.getElementById("Pet_Fee").value);
         var price = (document.getElementById("Price").value);
+        
+        
         //Setting data to Hotspot object
         hotels.set("Name", name);
-        hotels.set("Restrictions", restrictions);
+        hotels.set("Restirctions", restrictions);
         hotels.set("Address", address);
         hotels.set("Website", Website);
         hotels.set("Phone", phone);
         hotels.set("Location", point);
-        hotels.set("Pet_fee", pet_fee);
         hotels.set("Price", price);
-        //Savin,g to Hotspot table
+        hotels.set("Pet_Fee", pet_fee);
+        //Saving to Hotspot table
+        
         hotels.save(null, {
           success : function(Hotels) {
-            alert("Data saved successfully on GoPuppyGo");
+            alert("Thank you for your contributions to GoPuppyGo!");
             //should change these to jquery alerts.
           },
           error : function(Hotels, error) {
-            alert("Could not save data on GoPuppyGo");
+            alert("Something wrong happens on GoPuppyGo and we are sorry for that~");
           }
         });
       }
@@ -117,15 +120,13 @@
           'Phone' : {
             'required' : true,
           },
-          'Pet_fee' : {
+          'Pet_Fee' : {
             'required' : true,
           },
-
           'Price' : {
             'required' : true,
-          }
+          },
         }
-
       });
 
       function successLoc(position) {
@@ -186,7 +187,7 @@
             <br>
 
             <label for="Restrictions" class="ui-hidden-accessible">Restrictions:</label>
-            <input id="Restrictions" name="Restrictions" type="text" placeholder="Add restrictions" data-mini="true"/>
+            <input id="Restrictions" name="Restrictions" type="text" placeholder="Restrictions" data-mini="true"/>
             <br>
 
             <label for="Address" class="ui-hidden-accessible">Address:</label>
@@ -194,9 +195,9 @@
 
             <label for="Phone" class="ui-hidden-accessible">Phone:</label>
             <input id="Phone" name="Phone" type="text" placeholder="Phone" data-mini="true"/>
-
-            <label for="Pet_fee" class="ui-hidden-accessible">Pet_fee:</label>
-            <input id="Pet_fee" name="Pet_fee" type="text" placeholder="Pet_fee" data-mini="true"/>
+            
+            <label for="Pet_Fee" class="ui-hidden-accessible">Pet_Fee:</label>
+            <input id="Pet_Fee" name="Pet_Fee" type="text" placeholder="Pet_Fee" data-mini="true"/>
 
             <label for="Price" class="ui-hidden-accessible">Price:</label>
             <input id="Price" name="Price" type="text" placeholder="Price" data-mini="true"/>
@@ -227,7 +228,7 @@
 
           </div><!-->
 
-          <input type="button" value="Submit" onclick="mainFunction()" data-theme="a" data-mini="true"/>
+          <input type="button" value="Submit Data" onclick="mainFunction()" data-theme="a" data-mini="true"/>
 
         </form>
       </div>
