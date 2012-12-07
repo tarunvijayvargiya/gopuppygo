@@ -76,7 +76,7 @@
         var Website = (document.getElementById("Website").value);
         var phone = (document.getElementById("Phone").value);
         var address = (document.getElementById("Address").value);
-        var pet_fee = (document.getElementById("Pet_Fee").value);
+        var pet_fee = (document.getElementById("Pet_fee").value);
         var price = (document.getElementById("Price").value);
         
         
@@ -88,7 +88,7 @@
         hotels.set("Phone", phone);
         hotels.set("Location", point);
         hotels.set("Price", price);
-        hotels.set("Pet_Fee", pet_fee);
+        hotels.set("Pet_fee", pet_fee);
         //Saving to Hotspot table
         
         hotels.save(null, {
@@ -120,7 +120,7 @@
           'Phone' : {
             'required' : true,
           },
-          'Pet_Fee' : {
+          'Pet_fee' : {
             'required' : true,
           },
           'Price' : {
@@ -196,8 +196,8 @@
             <label for="Phone" class="ui-hidden-accessible">Phone:</label>
             <input id="Phone" name="Phone" type="text" placeholder="Phone" data-mini="true"/>
             
-            <label for="Pet_Fee" class="ui-hidden-accessible">Pet_Fee:</label>
-            <input id="Pet_Fee" name="Pet_Fee" type="text" placeholder="Pet_Fee" data-mini="true"/>
+            <label for="Pet_fee" class="ui-hidden-accessible">Pet_fee:</label>
+            <input id="Pet_fee" name="Pet_fee" type="text" placeholder="Pet_fee" data-mini="true"/>
 
             <label for="Price" class="ui-hidden-accessible">Price:</label>
             <input id="Price" name="Price" type="text" placeholder="Price" data-mini="true"/>
